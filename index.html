@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArenaCash — Indique um amigo e ganhe R$ 50</title>
+<style>
+  :root {
+    --azul-noite: #0A1440;
+    --azul-marca: #1E3FE0;
+    --azul-eletrico: #3D6BFF;
+    --azul-gelo: #EAF0FF;
+    --branco: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: #DCE3F0;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Palco: centraliza o slide na tela, como em um apresentador */
+  .palco {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .slide {
+    position: relative;
+    width: 1280px;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(150deg, var(--azul-noite) 0%, var(--azul-marca) 62%, var(--azul-eletrico) 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -20px rgba(10, 20, 64, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6% 8%;
+  }
+
+  /* Assinatura visual: rede de nós conectados representando indicações,
+     ancorada no canto — remete a "uma pessoa puxa a próxima" */
+  .rede {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.9;
+  }
+
+  .no {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .no--preenchido {
+    background: var(--branco);
+    border: none;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.35);
+  }
+
+  .linha {
+    position: absolute;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.25);
+    transform-origin: left center;
+  }
+
+  @keyframes pulsar {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.75; }
+  }
+
+  .no--vivo { animation: pulsar 3.2s ease-in-out infinite; }
+
+  /* Conteúdo */
+  .conteudo {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--branco);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #7FFFD4;
+    box-shadow: 0 0 10px #7FFFD4;
+  }
+
+  h1 {
+    font-size: clamp(40px, 5.2vw, 68px);
+    line-height: 1.04;
+    font-weight: 800;
+    color: var(--branco);
+    letter-spacing: -0.02em;
+  }
+
+  h1 .destaque {
+    color: #7FE0C8;
+    background: linear-gradient(90deg, #7FE0C8, #B9FFEF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitulo {
+    margin-top: 22px;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.55;
+    color: var(--azul-gelo);
+    font-weight: 400;
+    max-width: 480px;
+  }
+
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    background: var(--branco);
+    color: var(--azul-noite);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px 30px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .botao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px -8px rgba(0, 0, 0, 0.45);
+  }
+
+  .botao:active { transform: translateY(0); }
+
+  .botao svg { width: 16px; height: 16px; }
+
+  .marca {
+    position: absolute;
+    z-index: 2;
+    top: 6%;
+    left: 8%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--branco);
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+
+  .marca .logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--branco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--azul-marca);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .selo-valor {
+    position: absolute;
+    z-index: 2;
+    right: 8%;
+    bottom: 8%;
+    text-align: right;
+    color: var(--branco);
+  }
+
+  .selo-valor .valor {
+    font-size: clamp(52px, 6vw, 84px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  .selo-valor .valor span {
+    font-size: 0.4em;
+    vertical-align: super;
+    font-weight: 700;
+  }
+
+  .selo-valor .legenda {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--azul-gelo);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 720px) {
+    .slide { aspect-ratio: auto; min-height: 100vh; border-radius: 0; padding: 32px 24px; }
+    .marca { position: static; margin-bottom: 40px; }
+    .selo-valor { position: static; margin-top: 40px; text-align: left; }
+    .conteudo { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="palco">
+    <section class="slide" aria-label="Slide de capa: campanha Indique um amigo e ganhe R$ 50">
+
+      <!-- Assinatura visual: rede de indicações -->
+      <div class="rede" aria-hidden="true">
+        <div class="linha" style="top: 22%; left: 62%; width: 220px; transform: rotate(18deg);"></div>
+        <div class="linha" style="top: 40%; left: 70%; width: 160px; transform: rotate(-24deg);"></div>
+        <div class="linha" style="top: 58%; left: 66%; width: 190px; transform: rotate(8deg);"></div>
+        <div class="linha" style="top: 33%; left: 80%; width: 130px; transform: rotate(60deg);"></div>
+
+        <div class="no no--preenchido no--vivo" style="width: 14px; height: 14px; top: 21%; left: 60%;"></div>
+        <div class="no" style="width: 46px; height: 46px; top: 16%; left: 78%;"></div>
+        <div class="no" style="width: 30px; height: 30px; top: 36%; left: 88%;"></div>
+        <div class="no" style="width: 60px; height: 60px; top: 52%; left: 84%;"></div>
+        <div class="no" style="width: 22px; height: 22px; top: 68%; left: 72%;"></div>
+        <div class="no" style="width: 38px; height: 38px; top: 74%; left: 90%;"></div>
+      </div>
+
+      <div class="marca">
+        <span class="logo">A</span>
+        ArenaCash
+      </div>
+
+      <div class="conteudo">
+        <span class="eyebrow">Campanha de indicação</span>
+        <h1>Indique um amigo e <span class="destaque">ganhe R$ 50</span></h1>
+        <p class="subtitulo">
+          Compartilhe seu código, seu amigo abre a conta na ArenaCash
+          e os dois saem ganhando. Sem pegadinha, sem limite de indicações.
+        </p>
+        <button class="botao" type="button">
+          Saiba mais
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="selo-valor">
+        <div class="valor"><span>R$</span>50</div>
+        <div class="legenda">por indicação</div>
+      </div>
+
+    </section>
+  </div>
+
+</body>
+</html>
